@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>분석 페이지</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Intro Section -->
+<section class="intro-section text-center bg-dark text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="display-6"> MiniProject </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 탭 메뉴 추가 -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="new-tab" data-toggle="tab" href="#new" role="tab" aria-controls="new" aria-selected="true">Prediction</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="analysis-tab" data-toggle="tab" href="#analysis" role="tab" aria-controls="analysis" aria-selected="false">Performance</a>
+    </li>
+</ul>
+
+   
+
+<!-- 탭 내용 추가 -->
+<div class="tab-content" id="myTabContent">
+
+    <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new-tab">
+        
+        <!-- 첫번째 탭  -->
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h1 class="mb-3 text-center" style="font-size: 20px;"> Prediction </h1>
+                    <br>
+                                        <!-- Add the image here -->
+                    <div id="imageContainer">
+                        <label> Predict if your income is below or above the historic average in Korea. </label>
+                        <img src="/images/main_image.jpeg" alt="slab_predict.jpeg" class="img-fluid">
+                    </div>
+                    <br>
+                    <form>
+
+                        <div class="form-group">
+                            <label for="year">Year </label>
+                            <input type="text" class="form-control" id="year" placeholder="조사연도를 입력해주세요.">
+                        </div>
+                        <div class="form-group">
+                            <label for="region">Region </label>
+                            <input type="text" class="form-control" id="region" placeholder="지역을 입력해주세요. (Performance 탭 참고)">
+                        </div>
+                        <div class="form-group">
+                            <label for="family_member">Family member </label>
+                            <input type="text" class="form-control" id="family_member" placeholder="가족 구성원수를 입력해즈세요.">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <input type="text" class="form-control" id="gender" placeholder="성별을 입력해주세요.(Performance 탭 참고) ">
+                        </div>
+                        <div class="form-group">
+                            <label for="year_born">Year born</label>
+                            <input type="text" class="form-control" id="year_born" placeholder="출생년도를 입력해주세요.">
+                        </div>
+                         <div class="form-group">
+                            <label for="education_level">Education level</label>
+                            <input type="text" class="form-control" id="education_level" placeholder="교육수준을 입력해주세요.(Performance 탭 참고)">
+                        </div>
+                        <div class="form-group">
+                            <label for="marriage">Marriage</label>
+                            <input type="text" class="form-control" id="marriage" placeholder="결혼여부를 입력해주세요.(Performance 탭 참고)">
+                        </div>
+                        <div class="form-group">
+                            <label for="religion">Religion</label>
+                            <input type="text" class="form-control" id="religion" placeholder="종교여부를 입력해주세요.(Performance 탭 참고)">
+                        </div>
+
+                        <button type="button" class="btn btn-success btn-block" id="downloadBtn1">Download sample data</button>
+                        <br>
+                        <button type="button" class="btn btn-primary btn-block" id="prdBtn">Predict</button>
+                        <div id=baseResult></div>
+        <!--                 <div class="form-group">
+                            <label id="input4">예측결과 </label>
+                        </div> -->
+                     </form>
+                    <div class="mt-4" id="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="analysis" role="tabpanel" aria-labelledby="analysis-tab">
+        <!-- 기존 분석 페이지 내용 -->
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+		    <div class ="container mt-6">
+			    <img src="/images/data_list.png" alt="data_list">
+                <div class="col-md-6">
+		    <img src="/images/graph_image.png" alt="graph">
+                    <div class="mt-4" id="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // 새로운 탭 클릭 시 해당 탭으로 이동하는 함수
+    $(document).ready(function() {
+        $('#new-tab').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        })
+    });
+
+</script>
+
+
+<script>
+    document.getElementById('downloadBtn1').addEventListener('click', function() {
+        var link = document.createElement("a");
+        link.href = "/datas/korean_income.csv"; // 다운로드할 파일의 경로
+        link.download = "korean_income.csv"; // 다운로드될 파일의 이름
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+</script>
+
+
+<script>
+
+    // config.json 파일 로드
+    var newHostname = "43.203.230.50";
+    var newPort = "9999"
+
+      // 분석시작 버튼 클릭 시 분석서버와 연계 코드
+      $("#prdBtn").click(function(){
+
+        let year = Number($("#year").val());
+        let region = Number($("#region").val());
+        let family_member = Number($("#family_member").val());
+        let gender = Number($("#gender").val());
+        let year_born = Number($("#year_born").val());
+        let education_level = Number($("#education_level").val());
+        let marriage = Number($("#marriage").val());
+        let religion = Number($("#religion").val());
+	let prediction = String($("#prediction").val());
+
+        let urlBase = `http://${newHostname}:${newPort}`;
+
+        let urlFullBase = urlBase+"/predict";
+
+        let reqDataBase = {
+          'year': year,
+          'region': region,
+          'family_member': family_member,
+          'gender': gender,
+          'year_born': year_born,
+          'education_level': education_level,
+          'marriage': marriage,
+          'religion': religion		
+        };
+
+ 
+        const headersBase = {
+          "Content-Type": "application/json"
+        };
+
+        const dataBase = JSON.stringify(reqDataBase);
+        console.log(dataBase);
+        // 'year', 'region', 'family_member', 'gender', 'year_born', 'education_level', 'marriage', 'religion'
+        $.ajax({
+          url: urlFullBase,
+          headers: headersBase,
+          data: dataBase,
+          method: 'POST',
+          success: function(data) {
+            console.log(data);
+            // $('#input4').text(${data.result});
+			  $("#baseResult").append(`<div> year: ${year} region: ${region} family_member: ${family_member} gender: ${gender} year_born: ${year_born} education_level: ${education_level} marriage: ${marriage} religion: ${religion}=> prediction: ${data}</div>`);
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
